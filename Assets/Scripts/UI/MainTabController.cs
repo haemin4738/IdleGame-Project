@@ -8,21 +8,35 @@ public class MainTabController : MonoBehaviour
     [SerializeField] GameObject petPanel;
     [SerializeField] GameObject achievementPanel;
 
-    void Start() => ShowTab(upgradePanel);
+    GameObject _activePanel;
 
-    public void OnTabBattle()      => ShowTab(battlePanel);
-    public void OnTabUpgrade()     => ShowTab(upgradePanel);
-    public void OnTabSkill()       => ShowTab(skillPanel);
-    public void OnTabPet()         => ShowTab(petPanel);
-    public void OnTabAchievement() => ShowTab(achievementPanel);
+    void Start() => HideAll();
 
-    void ShowTab(GameObject target)
+    public void OnTabBattle()      => Toggle(battlePanel);
+    public void OnTabUpgrade()     => Toggle(upgradePanel);
+    public void OnTabSkill()       => Toggle(skillPanel);
+    public void OnTabPet()         => Toggle(petPanel);
+    public void OnTabAchievement() => Toggle(achievementPanel);
+
+    void Toggle(GameObject target)
+    {
+        if (_activePanel == target)
+        {
+            target.SetActive(false);
+            _activePanel = null;
+            return;
+        }
+        HideAll();
+        target.SetActive(true);
+        _activePanel = target;
+    }
+
+    void HideAll()
     {
         battlePanel.SetActive(false);
         upgradePanel.SetActive(false);
         skillPanel.SetActive(false);
         petPanel.SetActive(false);
         achievementPanel.SetActive(false);
-        target.SetActive(true);
     }
 }
