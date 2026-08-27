@@ -17,14 +17,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # 프로젝트 경로: D:/Unity/Portpolio/IdleCA
 
 # 커맨드라인 빌드 (Windows)
-"C:/Program Files/Unity/Hub/Editor/<버전>/Editor/Unity.exe" \
+"C:/Program Files/Unity/Hub/Editor/6000.0.67f1/Editor/Unity.exe" \
   -quit -batchmode \
   -projectPath "D:/Unity/Portpolio/IdleCA" \
   -buildWindowsPlayer "Build/IdleCA.exe" \
   -logFile "Build/build.log"
 
 # 테스트 실행 (Unity Test Runner — Edit Mode)
-"C:/Program Files/Unity/Hub/Editor/<버전>/Editor/Unity.exe" \
+"C:/Program Files/Unity/Hub/Editor/6000.0.67f1/Editor/Unity.exe" \
   -quit -batchmode \
   -projectPath "D:/Unity/Portpolio/IdleCA" \
   -runTests -testPlatform EditMode \
