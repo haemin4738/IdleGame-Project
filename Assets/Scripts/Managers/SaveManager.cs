@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+// SaveManager가 GameManager보다 먼저 Awake되도록 실행 순서 보장
+[DefaultExecutionOrder(-100)]
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }

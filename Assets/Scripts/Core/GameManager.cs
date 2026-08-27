@@ -10,23 +10,23 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        Initialize();
-    }
-
-    void Initialize()
-    {
         SaveManager.Instance.Load();
     }
 
-    public void GoToBattle() => SceneManager.LoadScene(SCENE_BATTLE);
-    public void GoToMain() => SceneManager.LoadScene(SCENE_MAIN);
+    public void GoToBattle()
+    {
+        EventBus.Clear();
+        SceneManager.LoadScene(SCENE_BATTLE);
+    }
+
+    public void GoToMain()
+    {
+        EventBus.Clear();
+        SceneManager.LoadScene(SCENE_MAIN);
+    }
 
     void OnApplicationPause(bool paused)
     {
