@@ -22,6 +22,11 @@ public struct StageClearedEvent
     public int StageIndex;
 }
 
+public struct SkillPointsChangedEvent
+{
+    public int Points;
+}
+
 public struct AchievementUnlockedEvent
 {
     public string AchievementId;

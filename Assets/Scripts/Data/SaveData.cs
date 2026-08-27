@@ -16,7 +16,8 @@ public class SaveData
     public long gold = 0;
     public int currentStageIndex = 0;
     public List<UpgradeEntry> upgradeLevels = new();
-    public List<string> unlockedSkills = new();
+    public int skillPoints = 0;
+    public List<UpgradeEntry> skillLevels = new();
     public List<string> ownedPets = new();
     public long lastSaveTimestamp = 0;
 }
