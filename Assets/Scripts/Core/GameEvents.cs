@@ -1,4 +1,5 @@
 // EventBus에서 사용하는 이벤트 타입 정의
+
 public struct MonsterKilledEvent
 {
     public string MonsterName;
@@ -25,4 +26,12 @@ public struct AchievementUnlockedEvent
 {
     public string AchievementId;
     public string Title;
+}
+
+public enum DamageTarget { Character, Monster }
+
+public struct DamageEvent
+{
+    public DamageTarget Target;
+    public float Amount;
 }
