@@ -27,7 +27,7 @@ public class OfflineManager : MonoBehaviour
         if (data.lastSaveTimestamp == 0) return default;
 
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var elapsed = Mathf.Min(now - data.lastSaveTimestamp, MAX_OFFLINE_SECONDS);
+        var elapsed = Math.Min(now - data.lastSaveTimestamp, MAX_OFFLINE_SECONDS);
         if (elapsed <= 0) return default;
 
         // 골드/초 = 현재 스테이지 기반 (임시: 스테이지 인덱스 + 1)
