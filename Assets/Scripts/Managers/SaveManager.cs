@@ -1,11 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
-// SaveManager가 GameManager보다 먼저 Awake되도록 실행 순서 보장
 [DefaultExecutionOrder(-100)]
 public class SaveManager : MonoBehaviour
 {
-    public static SaveManager Instance { get; private set; }
+    static SaveManager _instance;
+    public static SaveManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                var go = new GameObject("[SaveManager]");
+                _instance = go.AddComponent<SaveManager>();
+                DontDestroyOnLoad(go);
+            }
+            return _instance;
+        }
+    }
 
     public SaveData Data { get; private set; } = new();
 
@@ -14,8 +26,8 @@ public class SaveManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
-        Instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
         DontDestroyOnLoad(gameObject);
         _provider = new JsonSaveProvider();
     }
