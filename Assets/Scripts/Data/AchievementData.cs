@@ -14,7 +14,7 @@ public class AchievementData : ScriptableObject
     public string title;
     [TextArea] public string description;
     public AchievementConditionType conditionType;
-    public long conditionValue;
-    public long goldReward;
-    public int skillPointReward;
+    public long[] milestoneValues;      // [5, 10, 15, 20, ...]
+    public long[] goldRewards;
+    public int[] skillPointRewards;
 }
