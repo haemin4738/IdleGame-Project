@@ -22,6 +22,12 @@ public struct StageClearedEvent
     public int StageIndex;
 }
 
+public struct StageChangedEvent
+{
+    public int StageIndex;
+    public string StageName;
+}
+
 public struct SkillPointsChangedEvent
 {
     public int Points;

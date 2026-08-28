@@ -6,12 +6,10 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     [SerializeField] CharacterData characterData;
-    [SerializeField] MonsterData[] stageMonsters;
 
     float _characterHp;
     float _monsterHp;
     MonsterData _currentMonster;
-    int _monsterIndex;
     bool _isBattling;
 
     const float REVIVE_DELAY = 3f;
@@ -23,24 +21,17 @@ public class BattleManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start() => StartBattle();
-
-    public void StartBattle()
+    void Start()
     {
-        _monsterIndex = 0;
         _characterHp = characterData.baseHP;
-        SpawnNextMonster();
+        LoadMonster(StageManager.Instance.CurrentStage.ActiveMonster);
     }
 
-    void SpawnNextMonster()
+    public void LoadMonster(MonsterData monster)
     {
-        if (_monsterIndex >= stageMonsters.Length)
-        {
-            OnStageCleared();
-            return;
-        }
-        _currentMonster = stageMonsters[_monsterIndex];
-        _monsterHp = _currentMonster.hp;
+        StopAllCoroutines();
+        _currentMonster = monster;
+        _monsterHp = monster.hp;
         _isBattling = true;
         StartCoroutine(BattleLoop());
     }
@@ -61,9 +52,7 @@ public class BattleManager : MonoBehaviour
     {
         float dmg = Mathf.Max(1f, characterData.baseATK - _currentMonster.def);
         _monsterHp -= dmg;
-
         EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg });
-
         if (_monsterHp <= 0) OnMonsterKilled();
     }
 
@@ -71,9 +60,7 @@ public class BattleManager : MonoBehaviour
     {
         float dmg = Mathf.Max(1f, _currentMonster.atk - characterData.baseDEF);
         _characterHp -= dmg;
-
         EventBus.Publish(new DamageEvent { Target = DamageTarget.Character, Amount = dmg });
-
         if (_characterHp <= 0) StartCoroutine(Revive());
     }
 
@@ -94,8 +81,8 @@ public class BattleManager : MonoBehaviour
         });
         EventBus.Publish(new GoldChangedEvent { NewAmount = SaveManager.Instance.Data.gold });
 
-        _monsterIndex++;
-        SpawnNextMonster();
+        // 같은 몬스터 재소환 — 스테이지 전환은 StageManager가 처리
+        LoadMonster(_currentMonster);
     }
 
     IEnumerator Revive()
@@ -104,14 +91,7 @@ public class BattleManager : MonoBehaviour
         StopAllCoroutines();
         yield return new WaitForSeconds(REVIVE_DELAY);
         _characterHp = characterData.baseHP;
-        _isBattling = true;
-        StartCoroutine(BattleLoop());
-    }
-
-    void OnStageCleared()
-    {
-        var stageIndex = SaveManager.Instance.Data.currentStageIndex;
-        EventBus.Publish(new StageClearedEvent { StageIndex = stageIndex });
+        LoadMonster(_currentMonster);
     }
 
     public float CharacterHpRatio => _characterHp / characterData.baseHP;
