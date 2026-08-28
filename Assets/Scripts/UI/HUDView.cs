@@ -29,7 +29,7 @@ public class HUDView : MonoBehaviour
         goldText.text = $"골드: {data.gold:N0}";
         levelText.text = $"Lv.{data.playerLevel}";
         long required = GameManager.ExpRequired(data.playerLevel);
-        expText.text = $"EXP: {data.playerExp} / {required}";
+        expText.text = $"{(float)data.playerExp / required * 100:F0}%";
         SetExpBar((float)data.playerExp / required);
     }
 
@@ -49,7 +49,7 @@ public class HUDView : MonoBehaviour
     void OnLevelUp(LevelUpEvent e)            => levelText.text = $"Lv.{e.NewLevel}";
     void OnExpChanged(PlayerExpChangedEvent e)
     {
-        expText.text = $"EXP: {e.CurrentExp} / {e.RequiredExp}";
+        expText.text = $"{(float)e.CurrentExp / e.RequiredExp * 100:F0}%";
         SetExpBar((float)e.CurrentExp / e.RequiredExp);
     }
 }
