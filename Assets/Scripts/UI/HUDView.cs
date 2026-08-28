@@ -36,13 +36,7 @@ public class HUDView : MonoBehaviour
     void SetExpBar(float ratio)
     {
         if (expBarFill == null) return;
-        var a = expBarFill.anchorMin;
-        var b = expBarFill.anchorMax;
-        a.x = 0f;
-        b.x = Mathf.Clamp01(ratio);
-        expBarFill.anchorMin = a;
-        expBarFill.anchorMax = b;
-        expBarFill.sizeDelta = Vector2.zero;
+        expBarFill.localScale = new Vector3(Mathf.Clamp01(ratio), 1f, 1f);
     }
 
     void OnGoldChanged(GoldChangedEvent e)    => goldText.text = $"골드: {e.NewAmount:N0}";
