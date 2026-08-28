@@ -7,7 +7,7 @@ public class HUDView : MonoBehaviour
     [SerializeField] TMP_Text goldText;
     [SerializeField] TMP_Text levelText;
     [SerializeField] TMP_Text expText;
-    [SerializeField] Slider expBar;
+    [SerializeField] Image expBarFill;
 
     void OnEnable()
     {
@@ -31,7 +31,7 @@ public class HUDView : MonoBehaviour
         levelText.text = $"Lv.{data.playerLevel}";
         long required = GameManager.ExpRequired(data.playerLevel);
         expText.text = $"EXP: {data.playerExp} / {required}";
-        if (expBar != null) expBar.value = (float)data.playerExp / required;
+        if (expBarFill != null) expBarFill.fillAmount = (float)data.playerExp / required;
     }
 
     void OnGoldChanged(GoldChangedEvent e)    => goldText.text = $"골드: {e.NewAmount:N0}";
@@ -39,6 +39,6 @@ public class HUDView : MonoBehaviour
     void OnExpChanged(PlayerExpChangedEvent e)
     {
         expText.text = $"EXP: {e.CurrentExp} / {e.RequiredExp}";
-        if (expBar != null) expBar.value = (float)e.CurrentExp / e.RequiredExp;
+        if (expBarFill != null) expBarFill.fillAmount = (float)e.CurrentExp / e.RequiredExp;
     }
 }
