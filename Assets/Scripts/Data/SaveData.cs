@@ -19,7 +19,7 @@ public class SaveData
     public int skillPoints = 0;
     public List<UpgradeEntry> skillLevels = new();
     public List<string> ownedPets = new();
-    public List<string> completedAchievements = new();
+    public List<UpgradeEntry> achievementMilestones = new();  // value = 수령 완료한 마일스톤 수
     public long totalMonstersKilled = 0;
     public long totalGoldEarned = 0;
     public long lastSaveTimestamp = 0;

@@ -12,50 +12,25 @@ public class AchievementManager : MonoBehaviour
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         EventBus.Subscribe<MonsterKilledEvent>(OnMonsterKilled);
-        EventBus.Subscribe<LevelUpEvent>(OnLevelUp);
-        EventBus.Subscribe<StageClearedEvent>(OnStageCleared);
     }
 
-    void OnDestroy()
-    {
-        EventBus.Unsubscribe<MonsterKilledEvent>(OnMonsterKilled);
-        EventBus.Unsubscribe<LevelUpEvent>(OnLevelUp);
-        EventBus.Unsubscribe<StageClearedEvent>(OnStageCleared);
-    }
+    void OnDestroy() => EventBus.Unsubscribe<MonsterKilledEvent>(OnMonsterKilled);
 
     void OnMonsterKilled(MonsterKilledEvent e)
     {
         var data = SaveManager.Instance.Data;
         data.totalMonstersKilled++;
         data.totalGoldEarned += e.GoldReward;
-        CheckAll();
     }
 
-    void OnLevelUp(LevelUpEvent _) => CheckAll();
-    void OnStageCleared(StageClearedEvent _) => CheckAll();
-
-    void CheckAll()
+    // 수령 완료한 마일스톤 수
+    public int GetClaimedCount(AchievementData a)
     {
-        var data = SaveManager.Instance.Data;
-        foreach (var a in achievements)
-        {
-            if (data.completedAchievements.Contains(a.name)) continue;
-            if (GetProgress(a) >= a.conditionValue) Unlock(a);
-        }
+        var entry = SaveManager.Instance.Data.achievementMilestones.Find(e => e.key == a.name);
+        return entry?.value ?? 0;
     }
 
-    void Unlock(AchievementData a)
-    {
-        var data = SaveManager.Instance.Data;
-        data.completedAchievements.Add(a.name);
-        data.gold += a.goldReward;
-        data.skillPoints += a.skillPointReward;
-        EventBus.Publish(new AchievementUnlockedEvent { AchievementId = a.name, Title = a.title });
-        EventBus.Publish(new GoldChangedEvent { NewAmount = data.gold });
-        if (a.skillPointReward > 0)
-            EventBus.Publish(new SkillPointsChangedEvent { Points = data.skillPoints });
-    }
-
+    // 현재 진행 값
     public long GetProgress(AchievementData a)
     {
         var data = SaveManager.Instance.Data;
@@ -69,8 +44,36 @@ public class AchievementManager : MonoBehaviour
         };
     }
 
-    public bool IsCompleted(AchievementData a) =>
-        SaveManager.Instance.Data.completedAchievements.Contains(a.name);
+    public bool IsAllDone(AchievementData a) =>
+        GetClaimedCount(a) >= a.milestoneValues.Length;
+
+    public bool CanClaim(AchievementData a)
+    {
+        int claimed = GetClaimedCount(a);
+        if (claimed >= a.milestoneValues.Length) return false;
+        return GetProgress(a) >= a.milestoneValues[claimed];
+    }
+
+    public void Claim(AchievementData a)
+    {
+        if (!CanClaim(a)) return;
+
+        int claimed = GetClaimedCount(a);
+        var data = SaveManager.Instance.Data;
+
+        data.gold += a.goldRewards[claimed];
+        data.skillPoints += a.skillPointRewards[claimed];
+
+        var list = data.achievementMilestones;
+        var entry = list.Find(e => e.key == a.name);
+        if (entry != null) entry.value++;
+        else list.Add(new UpgradeEntry { key = a.name, value = 1 });
+
+        EventBus.Publish(new AchievementUnlockedEvent { AchievementId = a.name, Title = a.title });
+        EventBus.Publish(new GoldChangedEvent { NewAmount = data.gold });
+        if (a.skillPointRewards[claimed] > 0)
+            EventBus.Publish(new SkillPointsChangedEvent { Points = data.skillPoints });
+    }
 
     public AchievementData[] GetAll() => achievements;
 }
