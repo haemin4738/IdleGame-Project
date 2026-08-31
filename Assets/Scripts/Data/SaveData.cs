@@ -29,4 +29,6 @@ public class SaveData
     public long totalMonstersKilled = 0;
     public long totalGoldEarned = 0;
     public long lastSaveTimestamp = 0;
+    public string selectedCharacterName = "";
+    public List<string> ownedCharacters = new();
 }

@@ -5,7 +5,6 @@ public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance { get; private set; }
 
-    [SerializeField] CharacterData characterData;
     [SerializeField] PetData[] allPets;
     [SerializeField] SkillData[] allSkills;
     [SerializeField] EquipmentData[] allEquipment;
@@ -28,7 +27,9 @@ public class BattleManager : MonoBehaviour
     StatBonus SkillBonus => SkillManager.Instance.GetTotalPassiveBonus(allSkills);
     StatBonus EquipBonus => EquipmentManager.Instance.GetTotalBonus(allEquipment);
 
-    float MaxHp => (characterData.baseHP + UpgradeManager.Instance.GetTotalBonus(StatType.HP))
+    CharacterData Character => CharacterManager.Instance.ActiveCharacter;
+
+    float MaxHp => (Character.baseHP + UpgradeManager.Instance.GetTotalBonus(StatType.HP))
                    * (1f + (PetBonus.hpPercent + SkillBonus.hpPercent + EquipBonus.hpPercent) / 100f);
 
     void Start()
@@ -61,10 +62,10 @@ public class BattleManager : MonoBehaviour
     void AttackMonster()
     {
         var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
-        float atk = (characterData.baseATK + UpgradeManager.Instance.GetTotalBonus(StatType.ATK))
+        float atk = (Character.baseATK + UpgradeManager.Instance.GetTotalBonus(StatType.ATK))
                     * (1f + (pb.atkPercent + sb.atkPercent + eb.atkPercent) / 100f);
-        float critChance = characterData.baseCritChance + UpgradeManager.Instance.GetTotalBonus(StatType.CritChance) + pb.critChanceFlat + sb.critChanceFlat + eb.critChanceFlat;
-        float critMult   = characterData.baseCritMultiplier + UpgradeManager.Instance.GetTotalBonus(StatType.CritDamage) + pb.critDamageFlat + sb.critDamageFlat + eb.critDamageFlat;
+        float critChance = Character.baseCritChance + UpgradeManager.Instance.GetTotalBonus(StatType.CritChance) + pb.critChanceFlat + sb.critChanceFlat + eb.critChanceFlat;
+        float critMult   = Character.baseCritMultiplier + UpgradeManager.Instance.GetTotalBonus(StatType.CritDamage) + pb.critDamageFlat + sb.critDamageFlat + eb.critDamageFlat;
         bool isCrit = Random.value * 100f < critChance;
         float dmg = Mathf.Max(1f, atk - _currentMonster.def);
         if (isCrit) dmg *= critMult;
@@ -76,7 +77,7 @@ public class BattleManager : MonoBehaviour
     void MonsterAttack()
     {
         var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
-        float def = characterData.baseDEF + UpgradeManager.Instance.GetTotalBonus(StatType.DEF)
+        float def = Character.baseDEF + UpgradeManager.Instance.GetTotalBonus(StatType.DEF)
                     + pb.defFlat + sb.defFlat + eb.defFlat;
         float dmg = Mathf.Max(1f, _currentMonster.atk - def);
         _characterHp -= dmg;

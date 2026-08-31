@@ -73,7 +73,8 @@ public class BattleView : MonoBehaviour
 
     void OnStageChanged(StageChangedEvent e)
     {
-        stageText.text = e.StageName;
+        stageText.text  = e.IsBossStage ? $"⚔ BOSS {e.StageName}" : e.StageName;
+        stageText.color = e.IsBossStage ? new UnityEngine.Color(1f, 0.3f, 0.3f) : UnityEngine.Color.white;
         UpdateMonsterDisplay(StageManager.Instance.CurrentStage.ActiveMonster);
         SetBar(monsterHpBarFill, 1f);
         UpdateKillCount();
