@@ -6,6 +6,7 @@ public class MonsterData : ScriptableObject
 {
     public string monsterName;
     public Sprite sprite;
+    public GameObject monsterPrefab;
     public float hp;
     public float atk;
     public float def;

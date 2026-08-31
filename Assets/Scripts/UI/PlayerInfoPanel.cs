@@ -40,7 +40,9 @@ public class PlayerInfoPanel : MonoBehaviour
         atkText.text   = $"공격력: {totalAtk:F0} ({CharacterManager.Instance.ActiveCharacter.baseATK:F0} + {totalAtk - CharacterManager.Instance.ActiveCharacter.baseATK:F0})";
         defText.text   = $"방어력: {totalDef:F0} ({CharacterManager.Instance.ActiveCharacter.baseDEF:F0} + {totalDef - CharacterManager.Instance.ActiveCharacter.baseDEF:F0})";
         hpText.text    = $"HP: {totalHp:F0} ({CharacterManager.Instance.ActiveCharacter.baseHP:F0} + {totalHp - CharacterManager.Instance.ActiveCharacter.baseHP:F0})";
-        speedText.text = $"속도: {CharacterManager.Instance.ActiveCharacter.baseSpeed + up.GetTotalBonus(StatType.Speed):F1}";
+        float baseSpeed = CharacterManager.Instance.ActiveCharacter.baseSpeed;
+        float speedBonus = up.GetTotalBonus(StatType.Speed);
+        speedText.text = $"속도: {baseSpeed + speedBonus:F2} ({baseSpeed:F2} + {speedBonus:F2})";
         float critChanceBonus = up.GetTotalBonus(StatType.CritChance) + pet.critChanceFlat + skill.critChanceFlat + equip.critChanceFlat;
         float critDamageBonus = up.GetTotalBonus(StatType.CritDamage) + pet.critDamageFlat + skill.critDamageFlat + equip.critDamageFlat;
         critText.text = $"크리티컬: {CharacterManager.Instance.ActiveCharacter.baseCritChance + critChanceBonus:F0}% ({CharacterManager.Instance.ActiveCharacter.baseCritChance:F0}% + {critChanceBonus:F0}%) / {CharacterManager.Instance.ActiveCharacter.baseCritMultiplier + critDamageBonus:F2}x";
