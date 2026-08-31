@@ -1,40 +1,47 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-
-    const string SCENE_MAIN = "Main";
-    const string SCENE_BATTLE = "Battle";
 
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        SaveManager.Instance.Load();
+        EventBus.Subscribe<MonsterKilledEvent>(OnMonsterKilled);
     }
 
-    public void GoToBattle()
+    void OnDestroy() => EventBus.Unsubscribe<MonsterKilledEvent>(OnMonsterKilled);
+
+    void OnMonsterKilled(MonsterKilledEvent e)
     {
-        EventBus.Clear();
-        SceneManager.LoadScene(SCENE_BATTLE);
+        var data = SaveManager.Instance.Data;
+        data.playerExp += e.ExpReward;
+
+        long required = ExpRequired(data.playerLevel);
+        while (data.playerExp >= required)
+        {
+            data.playerExp -= required;
+            data.playerLevel++;
+            required = ExpRequired(data.playerLevel);
+            EventBus.Publish(new LevelUpEvent { NewLevel = data.playerLevel });
+        }
+
+        EventBus.Publish(new PlayerExpChangedEvent
+        {
+            CurrentExp = data.playerExp,
+            RequiredExp = ExpRequired(data.playerLevel),
+            Level = data.playerLevel
+        });
     }
 
-    public void GoToMain()
-    {
-        EventBus.Clear();
-        SceneManager.LoadScene(SCENE_MAIN);
-    }
+    public static long ExpRequired(int level) => level * 100L;
 
     void OnApplicationPause(bool paused)
     {
         if (paused) SaveManager.Instance.Save();
     }
 
-    void OnApplicationQuit()
-    {
-        SaveManager.Instance.Save();
-    }
+    void OnApplicationQuit() => SaveManager.Instance.Save();
 }

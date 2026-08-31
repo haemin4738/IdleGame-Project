@@ -14,9 +14,12 @@ public class PetManager : MonoBehaviour
     public bool IsOwned(PetData pet) =>
         SaveManager.Instance.Data.ownedPets.Contains(pet.petName);
 
+    public bool IsUnlockable(PetData pet) =>
+        SaveManager.Instance.Data.currentStageIndex >= pet.unlockStageIndex;
+
     public void Unlock(PetData pet)
     {
-        if (IsOwned(pet)) return;
+        if (IsOwned(pet) || !IsUnlockable(pet)) return;
         SaveManager.Instance.Data.ownedPets.Add(pet.petName);
     }
 
@@ -26,11 +29,13 @@ public class PetManager : MonoBehaviour
         foreach (var pet in pets)
         {
             if (!IsOwned(pet)) continue;
-            total.atkPercent  += pet.passiveBonus.atkPercent;
-            total.hpPercent   += pet.passiveBonus.hpPercent;
-            total.goldPercent += pet.passiveBonus.goldPercent;
-            total.expPercent  += pet.passiveBonus.expPercent;
-            total.defFlat     += pet.passiveBonus.defFlat;
+            total.atkPercent     += pet.passiveBonus.atkPercent;
+            total.hpPercent      += pet.passiveBonus.hpPercent;
+            total.goldPercent    += pet.passiveBonus.goldPercent;
+            total.expPercent     += pet.passiveBonus.expPercent;
+            total.defFlat        += pet.passiveBonus.defFlat;
+            total.critChanceFlat += pet.passiveBonus.critChanceFlat;
+            total.critDamageFlat += pet.passiveBonus.critDamageFlat;
         }
         return total;
     }

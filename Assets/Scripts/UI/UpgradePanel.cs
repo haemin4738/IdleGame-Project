@@ -24,13 +24,25 @@ public class UpgradePanel : MonoBehaviour
     [SerializeField] TMP_Text speedCostText;
     [SerializeField] Button   speedButton;
 
+    [Header("CritChance")]
+    [SerializeField] TMP_Text critChanceStatText;
+    [SerializeField] TMP_Text critChanceCostText;
+    [SerializeField] Button   critChanceButton;
+
+    [Header("CritDamage")]
+    [SerializeField] TMP_Text critDamageStatText;
+    [SerializeField] TMP_Text critDamageCostText;
+    [SerializeField] Button   critDamageButton;
+
     void OnEnable()
     {
         EventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
-        atkButton.onClick.AddListener(()   => OnUpgrade(StatType.ATK));
-        hpButton.onClick.AddListener(()    => OnUpgrade(StatType.HP));
-        defButton.onClick.AddListener(()   => OnUpgrade(StatType.DEF));
-        speedButton.onClick.AddListener(() => OnUpgrade(StatType.Speed));
+        atkButton.onClick.AddListener(()        => OnUpgrade(StatType.ATK));
+        hpButton.onClick.AddListener(()         => OnUpgrade(StatType.HP));
+        defButton.onClick.AddListener(()        => OnUpgrade(StatType.DEF));
+        speedButton.onClick.AddListener(()      => OnUpgrade(StatType.Speed));
+        critChanceButton.onClick.AddListener(() => OnUpgrade(StatType.CritChance));
+        critDamageButton.onClick.AddListener(() => OnUpgrade(StatType.CritDamage));
         Refresh();
     }
 
@@ -41,11 +53,14 @@ public class UpgradePanel : MonoBehaviour
         hpButton.onClick.RemoveAllListeners();
         defButton.onClick.RemoveAllListeners();
         speedButton.onClick.RemoveAllListeners();
+        critChanceButton.onClick.RemoveAllListeners();
+        critDamageButton.onClick.RemoveAllListeners();
     }
 
     void OnUpgrade(StatType stat)
     {
-        UpgradeManager.Instance.TryUpgrade(stat);
+        if (!UpgradeManager.Instance.TryUpgrade(stat))
+            ToastPopup.Instance.Show("골드가 부족합니다");
         Refresh();
     }
 
@@ -60,7 +75,11 @@ public class UpgradePanel : MonoBehaviour
         hpCostText.text    = $"{um.GetCost(StatType.HP):N0}G";
         defStatText.text   = $"DEF +{um.GetTotalBonus(StatType.DEF)}";
         defCostText.text   = $"{um.GetCost(StatType.DEF):N0}G";
-        speedStatText.text = $"Speed +{um.GetTotalBonus(StatType.Speed):F1}";
-        speedCostText.text = $"{um.GetCost(StatType.Speed):N0}G";
+        speedStatText.text      = $"Speed +{um.GetTotalBonus(StatType.Speed):F1}";
+        speedCostText.text      = $"{um.GetCost(StatType.Speed):N0}G";
+        critChanceStatText.text = $"크리확률 +{um.GetTotalBonus(StatType.CritChance):F0}%";
+        critChanceCostText.text = $"{um.GetCost(StatType.CritChance):N0}G";
+        critDamageStatText.text = $"크리배율 +{um.GetTotalBonus(StatType.CritDamage):F2}x";
+        critDamageCostText.text = $"{um.GetCost(StatType.CritDamage):N0}G";
     }
 }

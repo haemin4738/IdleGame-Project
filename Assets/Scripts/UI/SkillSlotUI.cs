@@ -29,7 +29,8 @@ public class SkillSlotUI : MonoBehaviour
 
     void OnUpgrade()
     {
-        SkillManager.Instance.TryUpgrade(_skill);
+        if (!SkillManager.Instance.TryUpgrade(_skill))
+            ToastPopup.Instance.Show("스킬 포인트가 부족합니다");
         Refresh();
     }
 

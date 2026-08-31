@@ -6,12 +6,13 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     [SerializeField] CharacterData characterData;
-    [SerializeField] MonsterData[] stageMonsters;
+    [SerializeField] PetData[] allPets;
+    [SerializeField] SkillData[] allSkills;
+    [SerializeField] EquipmentData[] allEquipment;
 
     float _characterHp;
     float _monsterHp;
     MonsterData _currentMonster;
-    int _monsterIndex;
     bool _isBattling;
 
     const float REVIVE_DELAY = 3f;
@@ -23,24 +24,24 @@ public class BattleManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start() => StartBattle();
+    StatBonus PetBonus   => PetManager.Instance.GetTotalBonus(allPets);
+    StatBonus SkillBonus => SkillManager.Instance.GetTotalPassiveBonus(allSkills);
+    StatBonus EquipBonus => EquipmentManager.Instance.GetTotalBonus(allEquipment);
 
-    public void StartBattle()
+    float MaxHp => (characterData.baseHP + UpgradeManager.Instance.GetTotalBonus(StatType.HP))
+                   * (1f + (PetBonus.hpPercent + SkillBonus.hpPercent + EquipBonus.hpPercent) / 100f);
+
+    void Start()
     {
-        _monsterIndex = 0;
-        _characterHp = characterData.baseHP;
-        SpawnNextMonster();
+        _characterHp = MaxHp;
+        LoadMonster(StageManager.Instance.CurrentStage.ActiveMonster);
     }
 
-    void SpawnNextMonster()
+    public void LoadMonster(MonsterData monster)
     {
-        if (_monsterIndex >= stageMonsters.Length)
-        {
-            OnStageCleared();
-            return;
-        }
-        _currentMonster = stageMonsters[_monsterIndex];
-        _monsterHp = _currentMonster.hp;
+        StopAllCoroutines();
+        _currentMonster = monster;
+        _monsterHp = monster.hp;
         _isBattling = true;
         StartCoroutine(BattleLoop());
     }
@@ -59,21 +60,27 @@ public class BattleManager : MonoBehaviour
 
     void AttackMonster()
     {
-        float dmg = Mathf.Max(1f, characterData.baseATK - _currentMonster.def);
+        var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
+        float atk = (characterData.baseATK + UpgradeManager.Instance.GetTotalBonus(StatType.ATK))
+                    * (1f + (pb.atkPercent + sb.atkPercent + eb.atkPercent) / 100f);
+        float critChance = characterData.baseCritChance + UpgradeManager.Instance.GetTotalBonus(StatType.CritChance) + pb.critChanceFlat + sb.critChanceFlat + eb.critChanceFlat;
+        float critMult   = characterData.baseCritMultiplier + UpgradeManager.Instance.GetTotalBonus(StatType.CritDamage) + pb.critDamageFlat + sb.critDamageFlat + eb.critDamageFlat;
+        bool isCrit = Random.value * 100f < critChance;
+        float dmg = Mathf.Max(1f, atk - _currentMonster.def);
+        if (isCrit) dmg *= critMult;
         _monsterHp -= dmg;
-
-        EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg });
-
+        EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg, IsCrit = isCrit });
         if (_monsterHp <= 0) OnMonsterKilled();
     }
 
     void MonsterAttack()
     {
-        float dmg = Mathf.Max(1f, _currentMonster.atk - characterData.baseDEF);
+        var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
+        float def = characterData.baseDEF + UpgradeManager.Instance.GetTotalBonus(StatType.DEF)
+                    + pb.defFlat + sb.defFlat + eb.defFlat;
+        float dmg = Mathf.Max(1f, _currentMonster.atk - def);
         _characterHp -= dmg;
-
         EventBus.Publish(new DamageEvent { Target = DamageTarget.Character, Amount = dmg });
-
         if (_characterHp <= 0) StartCoroutine(Revive());
     }
 
@@ -94,8 +101,8 @@ public class BattleManager : MonoBehaviour
         });
         EventBus.Publish(new GoldChangedEvent { NewAmount = SaveManager.Instance.Data.gold });
 
-        _monsterIndex++;
-        SpawnNextMonster();
+        // 같은 몬스터 재소환 — 스테이지 전환은 StageManager가 처리
+        LoadMonster(_currentMonster);
     }
 
     IEnumerator Revive()
@@ -103,17 +110,10 @@ public class BattleManager : MonoBehaviour
         _isBattling = false;
         StopAllCoroutines();
         yield return new WaitForSeconds(REVIVE_DELAY);
-        _characterHp = characterData.baseHP;
-        _isBattling = true;
-        StartCoroutine(BattleLoop());
+        _characterHp = MaxHp;
+        LoadMonster(_currentMonster);
     }
 
-    void OnStageCleared()
-    {
-        var stageIndex = SaveManager.Instance.Data.currentStageIndex;
-        EventBus.Publish(new StageClearedEvent { StageIndex = stageIndex });
-    }
-
-    public float CharacterHpRatio => _characterHp / characterData.baseHP;
+    public float CharacterHpRatio => _characterHp / MaxHp;
     public float MonsterHpRatio => _currentMonster != null ? _monsterHp / _currentMonster.hp : 0f;
 }

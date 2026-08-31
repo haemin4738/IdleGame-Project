@@ -30,6 +30,7 @@ public class SaveManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
         _provider = new JsonSaveProvider();
+        Load();
     }
 
     void Start() => StartCoroutine(AutoSaveRoutine());
