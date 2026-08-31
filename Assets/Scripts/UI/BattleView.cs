@@ -4,15 +4,18 @@ using UnityEngine.UI;
 
 public class BattleView : MonoBehaviour
 {
-    [SerializeField] Image monsterImage;
+    [SerializeField] Transform monsterAnchor;
     [SerializeField] RectTransform characterHpBarFill;
     [SerializeField] RectTransform monsterHpBarFill;
     [SerializeField] TMP_Text stageText;
     [SerializeField] TMP_Text killCountText;
     [SerializeField] DamagePopup popupPrefab;
     [SerializeField] Projectile projectilePrefab;
-    [SerializeField] RectTransform monsterPopupAnchor;
+    [SerializeField] Canvas canvas;
     [SerializeField] RectTransform characterPopupAnchor;
+
+    GameObject _spawnedMonster;
+    Animator _monsterAnimator;
 
     void OnEnable()
     {
@@ -62,16 +65,33 @@ public class BattleView : MonoBehaviour
         else
         {
             SetBar(monsterHpBarFill, BattleManager.Instance.MonsterHpRatio);
-            SpawnPopup(monsterPopupAnchor, e.Amount, e.IsCrit);
+            SpawnMonsterPopup(e.Amount, e.IsCrit);
             SpawnProjectile();
         }
     }
 
     void SpawnProjectile()
     {
-        if (projectilePrefab == null || characterPopupAnchor == null || monsterPopupAnchor == null) return;
+        if (projectilePrefab == null || characterPopupAnchor == null) return;
+        var target = _spawnedMonster != null
+            ? Camera.main.WorldToScreenPoint(_spawnedMonster.transform.position)
+            : (Vector3)characterPopupAnchor.position;
         var p = Instantiate(projectilePrefab, transform);
-        p.Launch(characterPopupAnchor.position, monsterPopupAnchor.position);
+        p.Launch(characterPopupAnchor.position, target);
+    }
+
+    [SerializeField] Vector2 monsterPopupOffset = new Vector2(0.75f, 2f);
+
+    void SpawnMonsterPopup(float damage, bool isCrit)
+    {
+        if (popupPrefab == null || canvas == null || _spawnedMonster == null) return;
+        var worldPos = _spawnedMonster.transform.position + new Vector3(monsterPopupOffset.x, monsterPopupOffset.y, 0f);
+        var screenPos = Camera.main.WorldToScreenPoint(worldPos);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.GetComponent<RectTransform>(), screenPos, null, out var localPos);
+        var popup = Instantiate(popupPrefab, canvas.transform);
+        popup.GetComponent<RectTransform>().localPosition = localPos;
+        popup.Show(damage, isCrit);
     }
 
     void SpawnPopup(RectTransform anchor, float damage, bool isCrit)
@@ -97,7 +117,9 @@ public class BattleView : MonoBehaviour
 
     void UpdateMonsterDisplay(MonsterData monster)
     {
-        if (monster.sprite != null)
-            monsterImage.sprite = monster.sprite;
+        if (_spawnedMonster != null) Destroy(_spawnedMonster);
+        if (monsterAnchor == null || monster.monsterPrefab == null) return;
+        _spawnedMonster = Instantiate(monster.monsterPrefab, monsterAnchor.position, Quaternion.identity);
+        _monsterAnimator = _spawnedMonster.GetComponentInChildren<Animator>();
     }
 }

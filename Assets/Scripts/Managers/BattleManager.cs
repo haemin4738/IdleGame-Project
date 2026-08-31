@@ -15,7 +15,6 @@ public class BattleManager : MonoBehaviour
     bool _isBattling;
 
     const float REVIVE_DELAY = 3f;
-    const float ATTACK_INTERVAL = 1f;
 
     void Awake()
     {
@@ -28,6 +27,8 @@ public class BattleManager : MonoBehaviour
     StatBonus EquipBonus => EquipmentManager.Instance.GetTotalBonus(allEquipment);
 
     CharacterData Character => CharacterManager.Instance.ActiveCharacter;
+
+    float AttackInterval => 1f / Mathf.Max(0.1f, Character.baseSpeed + UpgradeManager.Instance.GetTotalBonus(StatType.Speed));
 
     float MaxHp => (Character.baseHP + UpgradeManager.Instance.GetTotalBonus(StatType.HP))
                    * (1f + (PetBonus.hpPercent + SkillBonus.hpPercent + EquipBonus.hpPercent) / 100f);
@@ -49,10 +50,9 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator BattleLoop()
     {
-        var wait = new WaitForSeconds(ATTACK_INTERVAL);
         while (_isBattling)
         {
-            yield return wait;
+            yield return new WaitForSeconds(AttackInterval);
             AttackMonster();
             if (!_isBattling) break;
             MonsterAttack();
