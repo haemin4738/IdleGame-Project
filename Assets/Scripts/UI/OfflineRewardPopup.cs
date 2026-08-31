@@ -17,7 +17,7 @@ public class OfflineRewardPopup : MonoBehaviour
         var h = reward.Seconds / 3600;
         var m = (reward.Seconds % 3600) / 60;
         goldText.text = $"+{reward.Gold:N0} 골드";
-        timeText.text = h > 0 ? $"{h}시간 {m}분 동안 수익" : $"{m}분 동안 수익";
+        timeText.text = $"{h:D2}:{m:D2} 동안 수익";
         panel.SetActive(true);
     }
 
