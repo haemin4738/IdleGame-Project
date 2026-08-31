@@ -50,12 +50,26 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator BattleLoop()
     {
+        StartCoroutine(PlayerAttackLoop());
+        StartCoroutine(MonsterAttackLoop());
+        yield break;
+    }
+
+    IEnumerator PlayerAttackLoop()
+    {
         while (_isBattling)
         {
             yield return new WaitForSeconds(AttackInterval);
-            AttackMonster();
-            if (!_isBattling) break;
-            MonsterAttack();
+            if (_isBattling) AttackMonster();
+        }
+    }
+
+    IEnumerator MonsterAttackLoop()
+    {
+        while (_isBattling)
+        {
+            yield return new WaitForSeconds(1f);
+            if (_isBattling) MonsterAttack();
         }
     }
 
