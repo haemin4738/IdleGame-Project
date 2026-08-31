@@ -7,6 +7,7 @@ public class MainTabController : MonoBehaviour
     [SerializeField] GameObject skillPanel;
     [SerializeField] GameObject petPanel;
     [SerializeField] GameObject achievementPanel;
+    [SerializeField] GameObject equipmentPanel;
 
     GameObject _activePanel;
 
@@ -17,6 +18,7 @@ public class MainTabController : MonoBehaviour
     public void OnTabSkill()       => Toggle(skillPanel);
     public void OnTabPet()         => Toggle(petPanel);
     public void OnTabAchievement() => Toggle(achievementPanel);
+    public void OnTabEquipment()   => Toggle(equipmentPanel);
 
     void Toggle(GameObject target)
     {
@@ -39,5 +41,6 @@ public class MainTabController : MonoBehaviour
         skillPanel.SetActive(false);
         petPanel.SetActive(false);
         achievementPanel.SetActive(false);
+        equipmentPanel.SetActive(false);
     }
 }
