@@ -15,6 +15,7 @@ public class SaveData
     public long playerExp = 0;
     public long gold = 0;
     public int currentStageIndex = 0;
+    public int maxReachedStageIndex = 0;
     public List<UpgradeEntry> upgradeLevels = new();
     public int skillPoints = 0;
     public List<UpgradeEntry> skillLevels = new();

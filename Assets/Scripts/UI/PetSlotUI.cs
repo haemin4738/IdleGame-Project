@@ -38,13 +38,14 @@ public class PetSlotUI : MonoBehaviour
 
     string BuildBonusText(StatBonus b)
     {
-        if (b.atkPercent     != 0) return $"ATK +{b.atkPercent}%";
-        if (b.hpPercent      != 0) return $"HP +{b.hpPercent}%";
-        if (b.goldPercent    != 0) return $"골드 +{b.goldPercent}%";
-        if (b.expPercent     != 0) return $"EXP +{b.expPercent}%";
-        if (b.defFlat        != 0) return $"DEF +{b.defFlat}";
-        if (b.critChanceFlat != 0) return $"크리확률 +{b.critChanceFlat}%";
-        if (b.critDamageFlat != 0) return $"크리배율 +{b.critDamageFlat:F2}x";
-        return "";
+        var parts = new System.Collections.Generic.List<string>();
+        if (b.atkPercent     != 0) parts.Add($"ATK +{b.atkPercent}%");
+        if (b.hpPercent      != 0) parts.Add($"HP +{b.hpPercent}%");
+        if (b.goldPercent    != 0) parts.Add($"골드 +{b.goldPercent}%");
+        if (b.expPercent     != 0) parts.Add($"EXP +{b.expPercent}%");
+        if (b.defFlat        != 0) parts.Add($"DEF +{b.defFlat}");
+        if (b.critChanceFlat != 0) parts.Add($"크리확률 +{b.critChanceFlat}%");
+        if (b.critDamageFlat != 0) parts.Add($"크리배율 +{b.critDamageFlat:F2}x");
+        return string.Join(", ", parts);
     }
 }

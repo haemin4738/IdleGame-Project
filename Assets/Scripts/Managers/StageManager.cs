@@ -33,7 +33,11 @@ public class StageManager : MonoBehaviour
         EventBus.Publish(new StageClearedEvent { StageIndex = data.currentStageIndex });
 
         if (data.currentStageIndex < stages.Length - 1)
+        {
             data.currentStageIndex++;
+            if (data.currentStageIndex > data.maxReachedStageIndex)
+                data.maxReachedStageIndex = data.currentStageIndex;
+        }
         else
             data.currentStageIndex = 0; // 현재 마지막 스테이지(1-5)이므로 1-1로 루프백
             // TODO: 2스테이지(2-1 이후) 추가 시 아래 주석 해제하고 위 루프백 제거

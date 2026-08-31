@@ -15,7 +15,7 @@ public class PetManager : MonoBehaviour
         SaveManager.Instance.Data.ownedPets.Contains(pet.petName);
 
     public bool IsUnlockable(PetData pet) =>
-        SaveManager.Instance.Data.currentStageIndex >= pet.unlockStageIndex;
+        SaveManager.Instance.Data.maxReachedStageIndex >= pet.unlockStageIndex;
 
     public void Unlock(PetData pet)
     {

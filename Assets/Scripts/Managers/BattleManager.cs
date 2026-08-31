@@ -89,8 +89,11 @@ public class BattleManager : MonoBehaviour
         _isBattling = false;
         StopAllCoroutines();
 
-        var gold = _currentMonster.goldReward;
-        var exp = _currentMonster.expReward;
+        var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
+        float goldMult = 1f + (pb.goldPercent + sb.goldPercent + eb.goldPercent) / 100f;
+        float expMult  = 1f + (pb.expPercent  + sb.expPercent  + eb.expPercent)  / 100f;
+        var gold = Mathf.RoundToInt(_currentMonster.goldReward * goldMult);
+        var exp  = Mathf.RoundToInt(_currentMonster.expReward  * expMult);
         SaveManager.Instance.Data.gold += gold;
 
         EventBus.Publish(new MonsterKilledEvent
