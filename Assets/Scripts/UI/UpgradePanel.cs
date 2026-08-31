@@ -45,7 +45,8 @@ public class UpgradePanel : MonoBehaviour
 
     void OnUpgrade(StatType stat)
     {
-        UpgradeManager.Instance.TryUpgrade(stat);
+        if (!UpgradeManager.Instance.TryUpgrade(stat))
+            ToastPopup.Instance.Show("골드가 부족합니다");
         Refresh();
     }
 

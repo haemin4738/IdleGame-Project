@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        SaveManager.Instance.Load();
         EventBus.Subscribe<MonsterKilledEvent>(OnMonsterKilled);
     }
 

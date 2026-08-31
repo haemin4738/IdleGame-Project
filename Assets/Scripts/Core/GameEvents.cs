@@ -52,4 +52,5 @@ public struct DamageEvent
 {
     public DamageTarget Target;
     public float Amount;
+    public bool IsCrit;
 }

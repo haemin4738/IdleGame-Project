@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MainTabController : MonoBehaviour
 {
-    [SerializeField] GameObject battlePanel;
+    [SerializeField] GameObject playerInfoPanel;
     [SerializeField] GameObject upgradePanel;
     [SerializeField] GameObject skillPanel;
     [SerializeField] GameObject petPanel;
@@ -12,7 +12,7 @@ public class MainTabController : MonoBehaviour
 
     void Start() => HideAll();
 
-    public void OnTabBattle()      => Toggle(battlePanel);
+    public void OnTabPlayerInfo()  => Toggle(playerInfoPanel);
     public void OnTabUpgrade()     => Toggle(upgradePanel);
     public void OnTabSkill()       => Toggle(skillPanel);
     public void OnTabPet()         => Toggle(petPanel);
@@ -28,12 +28,13 @@ public class MainTabController : MonoBehaviour
         }
         HideAll();
         target.SetActive(true);
+        target.transform.SetAsLastSibling();
         _activePanel = target;
     }
 
     void HideAll()
     {
-        battlePanel.SetActive(false);
+        playerInfoPanel.SetActive(false);
         upgradePanel.SetActive(false);
         skillPanel.SetActive(false);
         petPanel.SetActive(false);

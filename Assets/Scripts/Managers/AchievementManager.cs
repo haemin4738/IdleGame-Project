@@ -61,8 +61,8 @@ public class AchievementManager : MonoBehaviour
         int claimed = GetClaimedCount(a);
         var data = SaveManager.Instance.Data;
 
-        data.gold += a.goldRewards[claimed];
-        data.skillPoints += a.skillPointRewards[claimed];
+        data.gold += claimed < a.goldRewards.Length ? a.goldRewards[claimed] : 0;
+        data.skillPoints += claimed < a.skillPointRewards.Length ? a.skillPointRewards[claimed] : 0;
 
         var list = data.achievementMilestones;
         var entry = list.Find(e => e.key == a.name);
@@ -71,7 +71,7 @@ public class AchievementManager : MonoBehaviour
 
         EventBus.Publish(new AchievementUnlockedEvent { AchievementId = a.name, Title = a.title });
         EventBus.Publish(new GoldChangedEvent { NewAmount = data.gold });
-        if (a.skillPointRewards[claimed] > 0)
+        if (claimed < a.skillPointRewards.Length && a.skillPointRewards[claimed] > 0)
             EventBus.Publish(new SkillPointsChangedEvent { Points = data.skillPoints });
     }
 

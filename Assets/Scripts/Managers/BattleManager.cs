@@ -6,6 +6,8 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     [SerializeField] CharacterData characterData;
+    [SerializeField] PetData[] allPets;
+    [SerializeField] SkillData[] allSkills;
 
     float _characterHp;
     float _monsterHp;
@@ -21,9 +23,15 @@ public class BattleManager : MonoBehaviour
         Instance = this;
     }
 
+    StatBonus PetBonus   => PetManager.Instance.GetTotalBonus(allPets);
+    StatBonus SkillBonus => SkillManager.Instance.GetTotalPassiveBonus(allSkills);
+
+    float MaxHp => (characterData.baseHP + UpgradeManager.Instance.GetTotalBonus(StatType.HP))
+                   * (1f + (PetBonus.hpPercent + SkillBonus.hpPercent) / 100f);
+
     void Start()
     {
-        _characterHp = characterData.baseHP;
+        _characterHp = MaxHp;
         LoadMonster(StageManager.Instance.CurrentStage.ActiveMonster);
     }
 
@@ -50,15 +58,23 @@ public class BattleManager : MonoBehaviour
 
     void AttackMonster()
     {
-        float dmg = Mathf.Max(1f, characterData.baseATK - _currentMonster.def);
+        var pb = PetBonus; var sb = SkillBonus;
+        float atk = (characterData.baseATK + UpgradeManager.Instance.GetTotalBonus(StatType.ATK))
+                    * (1f + (pb.atkPercent + sb.atkPercent) / 100f);
+        bool isCrit = Random.value * 100f < characterData.baseCritChance;
+        float dmg = Mathf.Max(1f, atk - _currentMonster.def);
+        if (isCrit) dmg *= characterData.baseCritMultiplier;
         _monsterHp -= dmg;
-        EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg });
+        EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg, IsCrit = isCrit });
         if (_monsterHp <= 0) OnMonsterKilled();
     }
 
     void MonsterAttack()
     {
-        float dmg = Mathf.Max(1f, _currentMonster.atk - characterData.baseDEF);
+        var pb = PetBonus; var sb = SkillBonus;
+        float def = characterData.baseDEF + UpgradeManager.Instance.GetTotalBonus(StatType.DEF)
+                    + pb.defFlat + sb.defFlat;
+        float dmg = Mathf.Max(1f, _currentMonster.atk - def);
         _characterHp -= dmg;
         EventBus.Publish(new DamageEvent { Target = DamageTarget.Character, Amount = dmg });
         if (_characterHp <= 0) StartCoroutine(Revive());
@@ -90,10 +106,10 @@ public class BattleManager : MonoBehaviour
         _isBattling = false;
         StopAllCoroutines();
         yield return new WaitForSeconds(REVIVE_DELAY);
-        _characterHp = characterData.baseHP;
+        _characterHp = MaxHp;
         LoadMonster(_currentMonster);
     }
 
-    public float CharacterHpRatio => _characterHp / characterData.baseHP;
+    public float CharacterHpRatio => _characterHp / MaxHp;
     public float MonsterHpRatio => _currentMonster != null ? _monsterHp / _currentMonster.hp : 0f;
 }
