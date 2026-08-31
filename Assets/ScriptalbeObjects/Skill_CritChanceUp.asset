@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3854acb3bfd19a640ae13d4b4f301569, type: 3}
   m_Name: Skill_CritChanceUp
   m_EditorClassIdentifier:
-  skillName: "크리티컬 확률 증가"
+  skillName: "크리확률"
   icon: {fileID: 0}
   skillType: 1
   damage: 0
