@@ -8,4 +8,6 @@ public struct StatBonus
     public float goldPercent;
     public float expPercent;
     public float defFlat;
+    public float critChanceFlat;
+    public float critDamageFlat;
 }

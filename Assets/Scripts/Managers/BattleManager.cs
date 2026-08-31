@@ -61,9 +61,11 @@ public class BattleManager : MonoBehaviour
         var pb = PetBonus; var sb = SkillBonus;
         float atk = (characterData.baseATK + UpgradeManager.Instance.GetTotalBonus(StatType.ATK))
                     * (1f + (pb.atkPercent + sb.atkPercent) / 100f);
-        bool isCrit = Random.value * 100f < characterData.baseCritChance;
+        float critChance = characterData.baseCritChance + UpgradeManager.Instance.GetTotalBonus(StatType.CritChance) + pb.critChanceFlat + sb.critChanceFlat;
+        float critMult   = characterData.baseCritMultiplier + UpgradeManager.Instance.GetTotalBonus(StatType.CritDamage) + pb.critDamageFlat + sb.critDamageFlat;
+        bool isCrit = Random.value * 100f < critChance;
         float dmg = Mathf.Max(1f, atk - _currentMonster.def);
-        if (isCrit) dmg *= characterData.baseCritMultiplier;
+        if (isCrit) dmg *= critMult;
         _monsterHp -= dmg;
         EventBus.Publish(new DamageEvent { Target = DamageTarget.Monster, Amount = dmg, IsCrit = isCrit });
         if (_monsterHp <= 0) OnMonsterKilled();

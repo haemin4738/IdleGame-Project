@@ -20,4 +20,7 @@ MonoBehaviour:
     goldPercent: 0
     expPercent: 0
     defFlat: 0
-  unlockCondition: 
+    critChanceFlat: 0
+    critDamageFlat: 0
+  unlockStageIndex: 0
+  unlockCondition:

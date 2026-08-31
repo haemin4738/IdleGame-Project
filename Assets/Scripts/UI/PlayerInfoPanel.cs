@@ -30,12 +30,18 @@ public class PlayerInfoPanel : MonoBehaviour
         float totalAtkMult = 1f + (pet.atkPercent + skill.atkPercent) / 100f;
         float totalHpMult  = 1f + (pet.hpPercent  + skill.hpPercent)  / 100f;
 
+        float totalAtk = baseAtk * totalAtkMult;
+        float totalDef = baseDef + pet.defFlat + skill.defFlat;
+        float totalHp  = baseHp * totalHpMult;
+
         nameText.text  = characterData.characterName;
         levelText.text = $"Lv.{data.playerLevel}";
-        atkText.text   = $"공격력: {baseAtk * totalAtkMult:F0}";
-        defText.text   = $"방어력: {baseDef + pet.defFlat + skill.defFlat:F0}";
-        hpText.text    = $"HP: {baseHp * totalHpMult:F0}";
+        atkText.text   = $"공격력: {totalAtk:F0} ({characterData.baseATK:F0} + {totalAtk - characterData.baseATK:F0})";
+        defText.text   = $"방어력: {totalDef:F0} ({characterData.baseDEF:F0} + {totalDef - characterData.baseDEF:F0})";
+        hpText.text    = $"HP: {totalHp:F0} ({characterData.baseHP:F0} + {totalHp - characterData.baseHP:F0})";
         speedText.text = $"속도: {characterData.baseSpeed + up.GetTotalBonus(StatType.Speed):F1}";
-        critText.text  = $"크리티컬: {characterData.baseCritChance:F0}% / {characterData.baseCritMultiplier:F1}x";
+        float critChanceBonus = up.GetTotalBonus(StatType.CritChance) + pet.critChanceFlat + skill.critChanceFlat;
+        float critDamageBonus = up.GetTotalBonus(StatType.CritDamage) + pet.critDamageFlat + skill.critDamageFlat;
+        critText.text = $"크리티컬: {characterData.baseCritChance + critChanceBonus:F0}% ({characterData.baseCritChance:F0}% + {critChanceBonus:F0}%) / {characterData.baseCritMultiplier + critDamageBonus:F2}x";
     }
 }

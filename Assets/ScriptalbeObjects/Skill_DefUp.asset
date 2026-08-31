@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3854acb3bfd19a640ae13d4b4f301569, type: 3}
-  m_Name: Skill_AtkUp
-  m_EditorClassIdentifier: 
-  skillName: "\uACF5\uACA9\uB825 \uC99D\uAC00"
+  m_Name: Skill_DefUp
+  m_EditorClassIdentifier:
+  skillName: "방어력 증가"
   icon: {fileID: 0}
   skillType: 1
   damage: 0
   cooldown: 0
-  effect: 
+  effect:
   maxLevel: 10
   statPerLevel:
-    atkPercent: 5
+    atkPercent: 0
     hpPercent: 0
     goldPercent: 0
     expPercent: 0
-    defFlat: 0
+    defFlat: 3

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public enum StatType { ATK, HP, DEF, Speed }
+public enum StatType { ATK, HP, DEF, Speed, CritChance, CritDamage }
 
 [DefaultExecutionOrder(-50)]
 public class UpgradeManager : MonoBehaviour
@@ -9,16 +9,20 @@ public class UpgradeManager : MonoBehaviour
     public static UpgradeManager Instance { get; private set; }
 
     // 업그레이드당 증가량
-    const float BONUS_ATK   = 5f;
-    const float BONUS_HP    = 50f;
-    const float BONUS_DEF   = 3f;
-    const float BONUS_SPEED = 0.1f;
+    const float BONUS_ATK         = 5f;
+    const float BONUS_HP          = 50f;
+    const float BONUS_DEF         = 3f;
+    const float BONUS_SPEED       = 0.1f;
+    const float BONUS_CRIT_CHANCE = 1f;
+    const float BONUS_CRIT_DAMAGE = 0.05f;
 
     // 스탯별 기본 비용
-    const long BASE_COST_ATK   = 100;
-    const long BASE_COST_HP    = 80;
-    const long BASE_COST_DEF   = 120;
-    const long BASE_COST_SPEED = 150;
+    const long BASE_COST_ATK         = 100;
+    const long BASE_COST_HP          = 80;
+    const long BASE_COST_DEF         = 120;
+    const long BASE_COST_SPEED       = 150;
+    const long BASE_COST_CRIT_CHANCE = 200;
+    const long BASE_COST_CRIT_DAMAGE = 250;
 
     const float COST_MULTIPLIER = 1.15f;
 
@@ -41,10 +45,12 @@ public class UpgradeManager : MonoBehaviour
         var level = GetLevel(stat);
         var baseCost = stat switch
         {
-            StatType.ATK   => BASE_COST_ATK,
-            StatType.HP    => BASE_COST_HP,
-            StatType.DEF   => BASE_COST_DEF,
-            StatType.Speed => BASE_COST_SPEED,
+            StatType.ATK        => BASE_COST_ATK,
+            StatType.HP         => BASE_COST_HP,
+            StatType.DEF        => BASE_COST_DEF,
+            StatType.Speed      => BASE_COST_SPEED,
+            StatType.CritChance => BASE_COST_CRIT_CHANCE,
+            StatType.CritDamage => BASE_COST_CRIT_DAMAGE,
             _ => BASE_COST_ATK
         };
         return (long)(baseCost * Math.Pow(COST_MULTIPLIER, level));
@@ -56,10 +62,12 @@ public class UpgradeManager : MonoBehaviour
         var level = GetLevel(stat);
         return stat switch
         {
-            StatType.ATK   => level * BONUS_ATK,
-            StatType.HP    => level * BONUS_HP,
-            StatType.DEF   => level * BONUS_DEF,
-            StatType.Speed => level * BONUS_SPEED,
+            StatType.ATK        => level * BONUS_ATK,
+            StatType.HP         => level * BONUS_HP,
+            StatType.DEF        => level * BONUS_DEF,
+            StatType.Speed      => level * BONUS_SPEED,
+            StatType.CritChance => level * BONUS_CRIT_CHANCE,
+            StatType.CritDamage => level * BONUS_CRIT_DAMAGE,
             _ => 0f
         };
     }
