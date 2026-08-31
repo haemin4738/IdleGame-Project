@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage1_4
   m_EditorClassIdentifier: 
   world: 1
-  stage: 2
+  stage: 4
   isBossStage: 0
   monster: {fileID: 11400000, guid: ed233440041f19e49be7c2444c0dba1f, type: 2}
   killsRequired: 25

@@ -2485,7 +2485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030518, y: 406}
+  m_AnchoredPosition: {x: 2, y: 351}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &477837250
@@ -3026,7 +3026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3142059ba3522354c9d04741795e1f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: {fileID: 11400000, guid: 237f44cb99d234b46bc9abb105ecf453, type: 2}
   allPets:
   - {fileID: 11400000, guid: 8974caf9a766c194fabab2cf9b690680, type: 2}
   allSkills:
@@ -3268,6 +3267,7 @@ MonoBehaviour:
   stageText: {fileID: 477837250}
   killCountText: {fileID: 1327517831}
   popupPrefab: {fileID: 9175713311398443634, guid: a36df9d81b4cb6e42b5b77ca6efb06a4, type: 3}
+  projectilePrefab: {fileID: 899723157278433979, guid: 93e8f8c152361ee44ae41c7b17ae98da, type: 3}
   monsterPopupAnchor: {fileID: 1444411562}
   characterPopupAnchor: {fileID: 713012808}
 --- !u!1 &628627467
@@ -3370,7 +3370,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -94, y: 495.97}
+  m_AnchoredPosition: {x: -164, y: 495.97}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &669953606
@@ -9315,7 +9315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035, y: 351}
+  m_AnchoredPosition: {x: 2.0000908, y: 295.99997}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1327517831
@@ -12389,7 +12389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259a66a36c7b2114d8dcab36ef067e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: {fileID: 11400000, guid: 237f44cb99d234b46bc9abb105ecf453, type: 2}
   allPets:
   - {fileID: 11400000, guid: 8974caf9a766c194fabab2cf9b690680, type: 2}
   allSkills: []
