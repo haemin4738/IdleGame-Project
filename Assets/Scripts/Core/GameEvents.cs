@@ -33,6 +33,7 @@ public struct StageChangedEvent
 {
     public int StageIndex;
     public string StageName;
+    public bool IsBossStage;
 }
 
 public struct SkillPointsChangedEvent

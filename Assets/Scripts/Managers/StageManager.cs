@@ -54,8 +54,9 @@ public class StageManager : MonoBehaviour
         var s = CurrentStage;
         EventBus.Publish(new StageChangedEvent
         {
-            StageIndex = SaveManager.Instance.Data.currentStageIndex,
-            StageName = s.StageName
+            StageIndex  = SaveManager.Instance.Data.currentStageIndex,
+            StageName   = s.StageName,
+            IsBossStage = s.isBossStage
         });
     }
 
