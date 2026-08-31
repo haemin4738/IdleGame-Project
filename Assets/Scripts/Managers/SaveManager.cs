@@ -35,7 +35,11 @@ public class SaveManager : MonoBehaviour
 
     void Start() => StartCoroutine(AutoSaveRoutine());
 
-    public void Save() => _provider.Save(Data);
+    public void Save()
+    {
+        Data.lastSaveTimestamp = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        _provider.Save(Data);
+    }
 
     public void Load() => Data = _provider.Load();
 
