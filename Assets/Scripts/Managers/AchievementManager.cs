@@ -40,6 +40,7 @@ public class AchievementManager : MonoBehaviour
             AchievementConditionType.GoldEarned       => data.totalGoldEarned,
             AchievementConditionType.LevelReach       => data.playerLevel,
             AchievementConditionType.StageReach       => data.currentStageIndex + 1,
+            AchievementConditionType.PetOwned         => data.ownedPets.Count,
             _ => 0
         };
     }

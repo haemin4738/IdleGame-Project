@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c3950dd4ca3f4a42a91e850fed45123, type: 3}
-  m_Name: CharacterData
-  m_EditorClassIdentifier: 
-  characterName: "\uC804\uC0AC"
+  m_Name: Character_Mage
+  m_EditorClassIdentifier:
+  characterName: "마법사"
   portrait: {fileID: 0}
-  baseHP: 100
-  baseATK: 10
-  baseDEF: 5
-  baseSpeed: 1
+  baseHP: 70
+  baseATK: 18
+  baseDEF: 2
+  baseSpeed: 1.1
   attackType: 1
-  unlockCost: 0
+  unlockCost: 10000
   ownedSkills: []
-  baseCritChance: 10
-  baseCritMultiplier: 1.5
+  baseCritChance: 15
+  baseCritMultiplier: 2.2

@@ -5,7 +5,8 @@ public enum AchievementConditionType
     MonsterKillCount,
     StageReach,
     GoldEarned,
-    LevelReach
+    LevelReach,
+    PetOwned
 }
 
 [CreateAssetMenu(menuName = "IdleCA/AchievementData")]

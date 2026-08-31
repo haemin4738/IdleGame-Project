@@ -10,6 +10,7 @@ public class BattleView : MonoBehaviour
     [SerializeField] TMP_Text stageText;
     [SerializeField] TMP_Text killCountText;
     [SerializeField] DamagePopup popupPrefab;
+    [SerializeField] Projectile projectilePrefab;
     [SerializeField] RectTransform monsterPopupAnchor;
     [SerializeField] RectTransform characterPopupAnchor;
 
@@ -62,7 +63,15 @@ public class BattleView : MonoBehaviour
         {
             SetBar(monsterHpBarFill, BattleManager.Instance.MonsterHpRatio);
             SpawnPopup(monsterPopupAnchor, e.Amount, e.IsCrit);
+            SpawnProjectile();
         }
+    }
+
+    void SpawnProjectile()
+    {
+        if (projectilePrefab == null || characterPopupAnchor == null || monsterPopupAnchor == null) return;
+        var p = Instantiate(projectilePrefab, transform);
+        p.Launch(characterPopupAnchor.position, monsterPopupAnchor.position);
     }
 
     void SpawnPopup(RectTransform anchor, float damage, bool isCrit)
@@ -73,7 +82,8 @@ public class BattleView : MonoBehaviour
 
     void OnStageChanged(StageChangedEvent e)
     {
-        stageText.text = e.StageName;
+        stageText.text  = e.IsBossStage ? $"BOSS {e.StageName}" : e.StageName;
+        stageText.color = e.IsBossStage ? new UnityEngine.Color(1f, 0.3f, 0.3f) : UnityEngine.Color.white;
         UpdateMonsterDisplay(StageManager.Instance.CurrentStage.ActiveMonster);
         SetBar(monsterHpBarFill, 1f);
         UpdateKillCount();

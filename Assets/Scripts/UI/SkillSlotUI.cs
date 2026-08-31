@@ -40,7 +40,9 @@ public class SkillSlotUI : MonoBehaviour
         if (b.hpPercent   != 0) return $"HP +{b.hpPercent    * level:F0}%";
         if (b.goldPercent != 0) return $"골드 +{b.goldPercent * level:F0}%";
         if (b.expPercent  != 0) return $"EXP +{b.expPercent  * level:F0}%";
-        if (b.defFlat     != 0) return $"DEF +{b.defFlat     * level:F0}";
+        if (b.defFlat        != 0) return $"DEF +{b.defFlat        * level:F0}";
+        if (b.critChanceFlat != 0) return $"크리확률 +{b.critChanceFlat * level:F0}%";
+        if (b.critDamageFlat != 0) return $"크리배율 +{b.critDamageFlat * level:F2}x";
         return "";
     }
 }
