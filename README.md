@@ -4,7 +4,10 @@ Unity 6로 제작한 포트폴리오용 방치형 RPG. 크레이지아케이드 
 
 ## 플레이 영상 / 스크린샷
 
-> _(추가 예정)_
+> https://github.com/user-attachments/assets/e365d57b-2ffc-481c-a1ad-ae7e4976a285
+
+
+
 
 ## 핵심 기능
 
