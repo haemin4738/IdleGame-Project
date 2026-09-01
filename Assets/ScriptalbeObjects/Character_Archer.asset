@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Character_Archer
   m_EditorClassIdentifier: 
   characterName: "\uAD81\uC218"
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: d3172583438a1234f9b1a3cd211e23a3, type: 3}
   baseHP: 80
   baseATK: 14
   baseDEF: 3

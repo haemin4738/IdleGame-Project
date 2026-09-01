@@ -15,6 +15,7 @@ public class BattleView : MonoBehaviour
     [SerializeField] RectTransform characterPopupAnchor;
 
     [SerializeField] Transform characterAnchor;
+    [SerializeField] UnityEngine.UI.Image characterPortrait;
 
     GameObject _spawnedMonster;
     Animator _monsterAnimator;
@@ -84,7 +85,7 @@ public class BattleView : MonoBehaviour
             ? Camera.main.WorldToScreenPoint(_spawnedCharacter.transform.position)
             : (characterPopupAnchor != null ? (Vector3)characterPopupAnchor.position : Vector3.zero);
         var target = _spawnedMonster != null
-            ? Camera.main.WorldToScreenPoint(_spawnedMonster.transform.position)
+            ? Camera.main.WorldToScreenPoint(_spawnedMonster.transform.position + Vector3.up * 0.75f)
             : start;
         var p = Instantiate(projectilePrefab, transform);
         p.Launch(start, target);
@@ -137,8 +138,10 @@ public class BattleView : MonoBehaviour
     void UpdateCharacterDisplay()
     {
         if (_spawnedCharacter != null) Destroy(_spawnedCharacter);
+        var character = CharacterManager.Instance.ActiveCharacter;
+        if (characterPortrait != null) characterPortrait.sprite = character.portrait;
         if (characterAnchor == null) return;
-        var prefab = CharacterManager.Instance.ActiveCharacter.characterPrefab;
+        var prefab = character.characterPrefab;
         if (prefab == null) return;
         _spawnedCharacter = Instantiate(prefab, characterAnchor.position, Quaternion.identity);
         _characterAnimator = _spawnedCharacter.GetComponent<Animator>();
