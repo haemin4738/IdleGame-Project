@@ -14,6 +14,7 @@ public class Projectile : MonoBehaviour
         while (Vector3.Distance(transform.position, to) > 8f)
         {
             transform.position = Vector3.MoveTowards(transform.position, to, speed * Time.deltaTime);
+            transform.Rotate(0f, 0f, 360f * Time.deltaTime);
             yield return null;
         }
         Destroy(gameObject);

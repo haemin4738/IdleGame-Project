@@ -55,3 +55,5 @@ public struct DamageEvent
     public float Amount;
     public bool IsCrit;
 }
+
+public struct CharacterChangedEvent { }

@@ -17,4 +17,5 @@ public class CharacterData : ScriptableObject
     public List<SkillData> ownedSkills;
     [Range(0f, 100f)] public float baseCritChance = 10f;
     public float baseCritMultiplier = 1.5f;
+    public GameObject characterPrefab;
 }

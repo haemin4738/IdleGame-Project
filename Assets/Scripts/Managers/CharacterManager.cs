@@ -45,6 +45,7 @@ public class CharacterManager : MonoBehaviour
     {
         if (!IsOwned(c)) return;
         SaveManager.Instance.Data.selectedCharacterName = c.characterName;
+        EventBus.Publish(new CharacterChangedEvent());
     }
 
     public CharacterData[] GetAll() => allCharacters;

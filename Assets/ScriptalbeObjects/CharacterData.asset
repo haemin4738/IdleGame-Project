@@ -23,3 +23,4 @@ MonoBehaviour:
   ownedSkills: []
   baseCritChance: 10
   baseCritMultiplier: 1.5
+  characterPrefab: {fileID: 4375835418865778988, guid: efcec73f21cc98a4387c4046cc9d1ff7, type: 3}

@@ -26,6 +26,12 @@ public class BattleManager : MonoBehaviour
     StatBonus SkillBonus => SkillManager.Instance.GetTotalPassiveBonus(allSkills);
     StatBonus EquipBonus => EquipmentManager.Instance.GetTotalBonus(allEquipment);
 
+    public float GoldMultiplier
+    {
+        get { var pb = PetBonus; var sb = SkillBonus; var eb = EquipBonus;
+              return 1f + (pb.goldPercent + sb.goldPercent + eb.goldPercent) / 100f; }
+    }
+
     CharacterData Character => CharacterManager.Instance.ActiveCharacter;
 
     float AttackInterval => 1f / Mathf.Max(0.1f, Character.baseSpeed + UpgradeManager.Instance.GetTotalBonus(StatType.Speed));
@@ -118,9 +124,6 @@ public class BattleManager : MonoBehaviour
             GoldReward = gold
         });
         EventBus.Publish(new GoldChangedEvent { NewAmount = SaveManager.Instance.Data.gold });
-
-        // 같은 몬스터 재소환 — 스테이지 전환은 StageManager가 처리
-        LoadMonster(_currentMonster);
     }
 
     IEnumerator Revive()
