@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [DefaultExecutionOrder(-45)]
@@ -25,6 +26,8 @@ public class StageManager : MonoBehaviour
         _killCount++;
         if (_killCount >= CurrentStage.RequiredKills)
             AdvanceStage();
+        else
+            BattleManager.Instance.LoadMonster(CurrentStage.ActiveMonster);
     }
 
     void AdvanceStage()
@@ -46,6 +49,12 @@ public class StageManager : MonoBehaviour
 
         _killCount = 0;
         PublishCurrentStage();
+        StartCoroutine(LoadMonsterDelayed());
+    }
+
+    IEnumerator LoadMonsterDelayed()
+    {
+        yield return new WaitForSeconds(0.6f);
         BattleManager.Instance.LoadMonster(CurrentStage.ActiveMonster);
     }
 

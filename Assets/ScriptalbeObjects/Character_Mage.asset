@@ -11,8 +11,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c3950dd4ca3f4a42a91e850fed45123, type: 3}
   m_Name: Character_Mage
-  m_EditorClassIdentifier:
-  characterName: "마법사"
+  m_EditorClassIdentifier: 
+  characterName: "\uB9C8\uBC95\uC0AC"
   portrait: {fileID: 0}
   baseHP: 70
   baseATK: 18
@@ -23,3 +23,4 @@ MonoBehaviour:
   ownedSkills: []
   baseCritChance: 15
   baseCritMultiplier: 2.2
+  characterPrefab: {fileID: 2496156944970174933, guid: 99f5d9a495f27f34e864901664e21c2d, type: 3}

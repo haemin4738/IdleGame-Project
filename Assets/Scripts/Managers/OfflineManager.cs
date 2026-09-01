@@ -30,9 +30,9 @@ public class OfflineManager : MonoBehaviour
         var elapsed = Math.Min(now - data.lastSaveTimestamp, MAX_OFFLINE_SECONDS);
         if (elapsed <= 0) return default;
 
-        // 골드/초 = 현재 스테이지 기반 (임시: 스테이지 인덱스 + 1)
+        var goldMult = BattleManager.Instance != null ? BattleManager.Instance.GoldMultiplier : 1f;
         var goldPerSecond = (data.currentStageIndex + 1) * 10L;
-        var earned = elapsed * goldPerSecond;
+        var earned = (long)(elapsed * goldPerSecond * goldMult);
 
         data.gold += earned;
         EventBus.Publish(new GoldChangedEvent { NewAmount = data.gold });

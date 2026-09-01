@@ -14,14 +14,19 @@ public class BattleView : MonoBehaviour
     [SerializeField] Canvas canvas;
     [SerializeField] RectTransform characterPopupAnchor;
 
+    [SerializeField] Transform characterAnchor;
+
     GameObject _spawnedMonster;
     Animator _monsterAnimator;
+    GameObject _spawnedCharacter;
+    Animator _characterAnimator;
 
     void OnEnable()
     {
         EventBus.Subscribe<DamageEvent>(OnDamage);
         EventBus.Subscribe<StageChangedEvent>(OnStageChanged);
         EventBus.Subscribe<MonsterKilledEvent>(OnMonsterKilled);
+        EventBus.Subscribe<CharacterChangedEvent>(OnCharacterChanged);
         Refresh();
     }
 
@@ -30,6 +35,7 @@ public class BattleView : MonoBehaviour
         EventBus.Unsubscribe<DamageEvent>(OnDamage);
         EventBus.Unsubscribe<StageChangedEvent>(OnStageChanged);
         EventBus.Unsubscribe<MonsterKilledEvent>(OnMonsterKilled);
+        EventBus.Unsubscribe<CharacterChangedEvent>(OnCharacterChanged);
     }
 
     void Refresh()
@@ -39,6 +45,7 @@ public class BattleView : MonoBehaviour
         var stage = StageManager.Instance.CurrentStage;
         stageText.text = stage.StageName;
         UpdateMonsterDisplay(stage.ActiveMonster);
+        UpdateCharacterDisplay();
         UpdateKillCount();
     }
 
@@ -72,15 +79,18 @@ public class BattleView : MonoBehaviour
 
     void SpawnProjectile()
     {
-        if (projectilePrefab == null || characterPopupAnchor == null) return;
+        if (projectilePrefab == null) return;
+        var start = _spawnedCharacter != null
+            ? Camera.main.WorldToScreenPoint(_spawnedCharacter.transform.position)
+            : (characterPopupAnchor != null ? (Vector3)characterPopupAnchor.position : Vector3.zero);
         var target = _spawnedMonster != null
             ? Camera.main.WorldToScreenPoint(_spawnedMonster.transform.position)
-            : (Vector3)characterPopupAnchor.position;
+            : start;
         var p = Instantiate(projectilePrefab, transform);
-        p.Launch(characterPopupAnchor.position, target);
+        p.Launch(start, target);
     }
 
-    [SerializeField] Vector2 monsterPopupOffset = new Vector2(0.75f, 2f);
+    readonly Vector2 monsterPopupOffset = new Vector2(0.75f, 2f);
 
     void SpawnMonsterPopup(float damage, bool isCrit)
     {
@@ -104,15 +114,36 @@ public class BattleView : MonoBehaviour
     {
         stageText.text  = e.IsBossStage ? $"BOSS {e.StageName}" : e.StageName;
         stageText.color = e.IsBossStage ? new UnityEngine.Color(1f, 0.3f, 0.3f) : UnityEngine.Color.white;
+        _characterAnimator?.SetTrigger("Attack");
+        StartCoroutine(DelayedMonsterUpdate());
+    }
+
+    System.Collections.IEnumerator DelayedMonsterUpdate()
+    {
+        yield return new WaitForSeconds(0.6f);
         UpdateMonsterDisplay(StageManager.Instance.CurrentStage.ActiveMonster);
         SetBar(monsterHpBarFill, 1f);
         UpdateKillCount();
     }
 
+    void OnCharacterChanged(CharacterChangedEvent _) => UpdateCharacterDisplay();
+
     void OnMonsterKilled(MonsterKilledEvent _)
     {
         SetBar(monsterHpBarFill, 1f);
         UpdateKillCount();
+    }
+
+    void UpdateCharacterDisplay()
+    {
+        if (_spawnedCharacter != null) Destroy(_spawnedCharacter);
+        if (characterAnchor == null) return;
+        var prefab = CharacterManager.Instance.ActiveCharacter.characterPrefab;
+        if (prefab == null) return;
+        _spawnedCharacter = Instantiate(prefab, characterAnchor.position, Quaternion.identity);
+        _characterAnimator = _spawnedCharacter.GetComponent<Animator>();
+        var sr = _spawnedCharacter.GetComponent<SpriteRenderer>();
+        if (sr != null) sr.sortingOrder = 5;
     }
 
     void UpdateMonsterDisplay(MonsterData monster)

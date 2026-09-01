@@ -11,8 +11,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c3950dd4ca3f4a42a91e850fed45123, type: 3}
   m_Name: Character_Archer
-  m_EditorClassIdentifier:
-  characterName: "궁수"
+  m_EditorClassIdentifier: 
+  characterName: "\uAD81\uC218"
   portrait: {fileID: 0}
   baseHP: 80
   baseATK: 14
@@ -23,3 +23,4 @@ MonoBehaviour:
   ownedSkills: []
   baseCritChance: 20
   baseCritMultiplier: 1.8
+  characterPrefab: {fileID: 5615731498981235781, guid: 32fc85052955bf14a897089dac62d556, type: 3}

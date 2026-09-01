@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Slime
   m_EditorClassIdentifier: 
   monsterName: Slime
-  sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 0}
+  monsterPrefab: {fileID: 4060603323306856039, guid: 73ca0eb8d8d8d6444b7fe34c500a4056, type: 3}
   hp: 20
   atk: 3
   def: 0
