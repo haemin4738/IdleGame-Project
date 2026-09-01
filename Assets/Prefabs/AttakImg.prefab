@@ -88,3 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc0d99b4da9b5743a1a521dff9faa3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionSprite: {fileID: 21300000, guid: 827dff4a798a11d4fa1f3b0988b50902, type: 3}
+  explosionSize: 80
+  explosionDuration: 0.35

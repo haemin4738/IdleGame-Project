@@ -8,6 +8,7 @@ public class CharacterSlotUI : MonoBehaviour
     [SerializeField] TMP_Text statsText;
     [SerializeField] TMP_Text actionButtonText;
     [SerializeField] Button actionButton;
+    [SerializeField] Image portraitImage;
 
     CharacterData _data;
 
@@ -15,6 +16,7 @@ public class CharacterSlotUI : MonoBehaviour
     {
         _data = data;
         actionButton.onClick.AddListener(OnAction);
+        if (portraitImage != null) portraitImage.sprite = data.portrait;
         Refresh();
     }
 
